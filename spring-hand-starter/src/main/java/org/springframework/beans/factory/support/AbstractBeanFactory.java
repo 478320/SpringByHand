@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * 抽象Bean工厂（关键）
  */
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 
@@ -23,7 +23,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 
 
-    //源码中该方法在这里实现，不行还是得在这里实现
+
     protected abstract Object doGetBean(String name);
 
         // 检查ioc容器有没有，如果已经有了，比如已经在别的bean创建的时候通过依赖创建了，那就不用再创建了

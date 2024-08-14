@@ -1,7 +1,7 @@
 package org.springframework.util;
 
 /**
- *
+ * 展示概念，类工具类
  */
 public class ClassUtils {
 

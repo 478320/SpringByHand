@@ -4,7 +4,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.core.AliasRegistry;
 
 /**
- *
+ * Bean定义注册中心接口
  */
 public interface BeanDefinitionRegistry extends AliasRegistry {
 

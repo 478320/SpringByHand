@@ -4,7 +4,7 @@ import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- *
+ * 依赖选择器（未实现）
  */
 public class AutoConfigurationImportSelector implements DeferredImportSelector {
 

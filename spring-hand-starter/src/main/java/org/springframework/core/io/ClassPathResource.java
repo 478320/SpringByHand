@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * 概念展示，类路径资源类
  */
 public class ClassPathResource extends AbstractFileResolvingResource{
     private final String path;

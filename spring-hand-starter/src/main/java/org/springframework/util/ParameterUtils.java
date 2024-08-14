@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * 判断参数是否为基本数据类型的工具类
  */
 public class ParameterUtils {
 

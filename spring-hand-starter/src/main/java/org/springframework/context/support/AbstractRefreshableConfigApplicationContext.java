@@ -4,7 +4,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- *
+ * 概念展示，Xml容器的父类，用于设置路径
  */
 public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
         implements BeanNameAware, InitializingBean {

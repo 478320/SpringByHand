@@ -1,7 +1,7 @@
 package org.springframework.beans.factory.config;
 
 /**
- *
+ * Bean定义顶层接口
  */
 public interface BeanDefinition {
 

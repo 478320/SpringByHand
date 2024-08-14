@@ -5,6 +5,9 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 
 import java.io.IOException;
 
+/**
+ *  概念展示
+ */
 public interface TypeFilter {
 
 	/**

@@ -1,7 +1,7 @@
 package org.springframework.beans.factory.config;
 
 /**
- *
+ * Bean定义存储类
  */
 public class BeanDefinitionHolder {
 

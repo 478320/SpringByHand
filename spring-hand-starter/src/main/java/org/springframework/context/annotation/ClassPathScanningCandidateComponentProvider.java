@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 概念展示
  */
 public class ClassPathScanningCandidateComponentProvider implements ResourceLoaderAware {
 

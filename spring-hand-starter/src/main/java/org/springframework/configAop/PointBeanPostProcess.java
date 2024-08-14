@@ -11,11 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Aop的关键处理器
  */
 @Component("pointBeanPostProcess")
 public class PointBeanPostProcess implements BeanPostProcessor {
 
+    /**
+     * 事务管理器，用于获取数据库连接
+     */
     @Autowired
     public TransactionalManager transactionalManager;
 
@@ -29,6 +32,9 @@ public class PointBeanPostProcess implements BeanPostProcessor {
         this.jointPointAnnotationMap = new HashMap<>();
     }
 
+    /**
+     * 初始化操作，将所有的切面类存储起来
+     */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         final Class<?> beanClass = bean.getClass();
@@ -44,15 +50,20 @@ public class PointBeanPostProcess implements BeanPostProcessor {
         return bean;
     }
 
+    /**
+     * 尝试进行Aop
+     */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
         final Class<?> beanClass = bean.getClass();
         final String path = beanClass.getName();
+        // 路径匹配，进行Aop
         for (String s : jointPointPathMap.keySet()) {
             if (path.startsWith(s)){
                 return AopProxyFactory.tryBuild(bean,jointPointPathMap.get(s), transactionalManager);
             }
         }
+        // 含有Aop自定义的自动Aop注解，进行Aop
         for (Object aopObject : jointPointAnnotationMap.values()) {
             return AopProxyFactory.tryBuild(bean, aopObject,transactionalManager);
         }

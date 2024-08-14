@@ -9,10 +9,13 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import java.util.Map;
 
 /**
- *
+ * 自定义类型条件注解
  */
 public class HuayuOnClassCondition implements Condition {
 
+    /**
+     * 判断条件是否成立
+     */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(HuayuConditionOnClass.class.getName());

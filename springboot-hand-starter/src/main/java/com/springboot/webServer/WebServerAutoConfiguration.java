@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
+ * Web的自动配置类
  */
 
 @Configuration
@@ -14,13 +14,13 @@ public class WebServerAutoConfiguration {
 
     @Bean
     @HuayuConditionOnClass("org.apache.catalina.startup.Tomcat")
-    public TomcatWebServer tomcatWebServer(){
+    public TomcatWebServer tomcatWebServer() {
         return new TomcatWebServer();
     }
 
     @Bean
     @HuayuConditionOnClass("org.eclipse.jetty.server.Server")
-    public JettyWebServer jettyWebServer(){
+    public JettyWebServer jettyWebServer() {
         return new JettyWebServer();
     }
 }

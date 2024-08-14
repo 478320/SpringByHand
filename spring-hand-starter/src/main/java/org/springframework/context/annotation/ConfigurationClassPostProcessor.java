@@ -5,7 +5,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.core.support.BeanDefinitionRegistry;
 
 /**
- *
+ * 概念展示
  */
 public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPostProcessor {
     @Override

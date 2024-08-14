@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-/** 废案别看
+/** （弃用！！）
  *
  */
 //@Component("transactionalPostProcess")

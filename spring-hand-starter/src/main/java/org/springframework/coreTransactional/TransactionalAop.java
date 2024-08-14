@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 
 /**
- *
+ * （弃用！！）
  */
 
 @org.springframework.annotationAop.Aop(joinAnnotationClass = Transactional.class)

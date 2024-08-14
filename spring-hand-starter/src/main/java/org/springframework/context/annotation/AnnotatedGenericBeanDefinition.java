@@ -4,7 +4,7 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 
 /**
- *
+ * 概念展示，注解Bean定义的普通定义
  */
 public class AnnotatedGenericBeanDefinition implements AnnotatedBeanDefinition{
     public <T> AnnotatedGenericBeanDefinition(Class<T> beanClass) {

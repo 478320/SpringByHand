@@ -2,7 +2,6 @@ package org.springframework.context.annotation;
 
 import org.springframework.HuayuApplicationContext;
 import org.springframework.annotation.*;
-import org.springframework.annotationAop.Aop;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -30,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * （非常重要！！）Spring的注解上下文
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
@@ -44,10 +43,16 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
     private ApplicationStartup applicationStartup = ApplicationStartup.DEFAULT;
 
+    // ----------------------------------------------------------------------------------------------------------
+    // 飞书文档中说的重点标注关键开始就是下面的构造方法
+    // ----------------------------------------------------------------------------------------------------------
+
     public AnnotationConfigApplicationContext(Class<?>... componentClasses) throws InvocationTargetException, IllegalAccessException {
-        //容器启动时先调用无参的构造方法
+
         this();
         register(componentClasses);
+
+        // 上面都只有概念这个刷新方法才真正实现
         refresh();
     }
 
@@ -116,15 +121,22 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
     @Override
     protected void refreshBeanFactory() throws IllegalStateException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+        // 加载Bean定义信息和创建Bean
         loadBeanDefinitions(beanFactory);
     }
 
+    /**
+     * 加载Bean定义信息和创建Bean
+     */
     private void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
 
         //扫描路径-BeanDefinition->放入beanDefinitionMap
         scan(configClass);
+        //扫描并创建含有@Bean注解的Bean
         scanAndCreateConfigBean(configClass);
+        //允许Spring使用事务，废案中需要使用，现在暂时没用
         enableTransactional();
+        //运行进行Aop
         enableAop();
         for (Map.Entry<String, BeanDefinition> entry : beanFactory.getBeanDefinitionMap().entrySet()) {
             String beanName = entry.getKey();
@@ -138,6 +150,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         }
     }
 
+    /**
+     * 扫描@Bean注解并创建实例注册到容器中
+     */
     private void scanAndCreateConfigBean(Class configClass) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         for (Method method : configClass.getMethods()) {
             // 判断配置类有没有Bean注解
@@ -147,6 +162,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         }
     }
 
+    /**
+     * 创建包含@Bean注解的Bean，并注册
+     */
     private Object createConfigBean(Class configClass, Method method) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Bean annotation = method.getAnnotation(Bean.class);
         // 获得Bean对应的名字
@@ -158,7 +176,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         }
         Class<?>[] parameterTypes = method.getParameterTypes();
         Parameter[] parameters = method.getParameters();
+        // 获得配置类实例用于反射执行方法
         Object instance = configClass.getDeclaredConstructor().newInstance();
+        // 判断参数长度，为0直接执行并注册
         if (parameterTypes.length == 0) {
             Object invoke = method.invoke(instance, null);
             GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition(invoke.getClass());
@@ -167,6 +187,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
             beanFactory.putSingletonObjects(beanName, invoke);
             return invoke;
         } else {
+            // 含有参数则需进行依赖注入
             Object[] args = new Object[parameterTypes.length];
             // 获取参数
             for (int i = 0; i < parameterTypes.length; i++) {
@@ -179,7 +200,6 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
                 String parameterBeanName = parameters[i].getDeclaredAnnotation(BeanName.class).value();
                 if (!beanFactory.getSingletonObjects().containsKey(parameterBeanName)) {
                     // 如果不存在这个Bean则遍历Config的全部方法，查看哪个方法上存在这个Bean注解上有对应的名字，并执行这个方法，然后注入到里面
-                    // 这里其实不太好，遍历全部性能不是很好，但是要做到遍历剩余的方法比较复杂，不作为重点，源码也不可能这样写，这只是为了实现事务做的缓兵之策
                     for (Method configClassMethod : configClass.getMethods()) {
                         if (configClassMethod.getAnnotation(Bean.class).value().equals(parameterBeanName)) {
                             // 递归创建这个Bean
@@ -228,23 +248,23 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         EnableAspectJAutoProxy enableAspectJAutoProxyAnnotation = (EnableAspectJAutoProxy) configClass.getDeclaredAnnotation(EnableAspectJAutoProxy.class);
         Import importAnnotation = enableAspectJAutoProxyAnnotation.annotationType().getDeclaredAnnotation(Import.class);
         Class<?>[] value = importAnnotation.value();
+        //将PointBeanPostProcess定义导入档案馆中
         importBean(value);
 
     }
 
     /**
-     * 目前Import默认要有component有点怪
-     *
-     * @param value
+     * 将Bean定义导入档案馆
      */
     private void importBean(Class<?>[] value) {
         for (Class<?> aClass : value) {
             ClassLoader classLoader = AnnotationConfigApplicationContext.class.getClassLoader();
-            dependencyInjection(classLoader, aClass.getName());
+            // 注入Bean定义
+            injectionBeanDefinition(classLoader, aClass.getName());
         }
     }
 
-    private void dependencyInjection(ClassLoader classLoader, String className) {
+    private void injectionBeanDefinition(ClassLoader classLoader, String className) {
         try {
             //根据类路径加载类
             Class<?> clazz = classLoader.loadClass(className);
@@ -271,6 +291,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
                 String beanName = componentAnnotation.value();
 
                 GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition(clazz);
+                // 设置Bean的类型
                 if (clazz.isAnnotationPresent(Scope.class)) {
                     Scope scopeAnnotation = clazz.getDeclaredAnnotation(Scope.class);
                     genericBeanDefinition.setScope(scopeAnnotation.value());
@@ -284,6 +305,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         }
     }
 
+    /**
+     * 创建Bean实例并放入Ioc容器中
+     */
     public Object createBean(String beanName, BeanDefinition beanDefinition) {
 
         Class clazz = beanDefinition.getBeanClass();
@@ -291,11 +315,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
             Object instance = clazz.getDeclaredConstructor().newInstance();
 
 
-            //Aware回调
+            // Aware回调
             if (instance instanceof BeanNameAware) {
                 ((BeanNameAware) instance).setBeanName(beanName);
             }
 
+            // 依赖注入
             for (Field declaredField : clazz.getDeclaredFields()) {
                 if (declaredField.isAnnotationPresent(Autowired.class)) {
                     Autowired autowired = (Autowired) clazz.getDeclaredAnnotation(Autowired.class);
@@ -308,11 +333,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
                 }
             }
 
+            // BeanPostProcessor前置处理器，Aop收集在这里完成
             for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
                 instance = beanPostProcessor.postProcessBeforeInitialization(instance, beanName);
             }
 
-            //初始化
+            // 初始化
             if (instance instanceof InitializingBean) {
                 try {
                     ((InitializingBean) instance).afterPropertiesSet();
@@ -320,8 +346,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
                     throw new RuntimeException(e);
                 }
             }
-            //BeanPostProcessor
-            //TODO Aop
+
+            // BeanPostProcessor后置处理器，Aop和事务在这里完成
             for (BeanPostProcessor beanPostProcessor : beanPostProcessorList) {
                 instance = beanPostProcessor.postProcessAfterInitialization(instance, beanName);
             }
@@ -340,6 +366,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
     }
 
+    /**
+     * 获得扫描路径
+     */
     private void scan(Class configClass) {
         if (!configClass.isAnnotationPresent(ComponentScan.class)) {
             throw new RuntimeException("缺少必要的注解");
@@ -350,6 +379,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         scanPackage(path);
     }
 
+    /**
+     * 根据扫描路径获得到对应文件
+     */
     private void scanPackage(String path) {
         path = path.replace(".", "/");
         //扫描
@@ -359,6 +391,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         scanDirectory(file, classLoader);
     }
 
+    /**
+     * 通过扫描的文件，进行Bean定义的注册
+     */
     private void scanDirectory(File file, ClassLoader classLoader) {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
@@ -374,7 +409,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
                 } else if (fileName.endsWith(".class")) {
                     String className = fileName.substring(fileName.indexOf("com"), fileName.indexOf(".class"));
                     className = className.replace("\\", ".");
-                    dependencyInjection(classLoader, className);
+                    // 注册bean定义
+                    injectionBeanDefinition(classLoader, className);
 
                 }
 

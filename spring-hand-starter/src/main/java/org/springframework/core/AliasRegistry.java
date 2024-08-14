@@ -1,7 +1,7 @@
 package org.springframework.core;
 
 /**
- *
+ * 概念展示，别名注册中心接口
  */
 public interface AliasRegistry {
 

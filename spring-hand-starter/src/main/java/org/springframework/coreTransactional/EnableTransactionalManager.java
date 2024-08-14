@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * （弃用！！）
  * 该类是为了导入一个选择器，目前不实现选择器暂时无任何作用
  */
 @Retention(RetentionPolicy.RUNTIME)

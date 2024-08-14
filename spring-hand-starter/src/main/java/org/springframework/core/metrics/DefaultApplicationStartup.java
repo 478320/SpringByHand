@@ -1,7 +1,7 @@
 package org.springframework.core.metrics;
 
 /**
- *
+ * 概念展示，标记类实现类
  */
 public class DefaultApplicationStartup implements ApplicationStartup{
     private static final DefaultStartupStep DEFAULT_STARTUP_STEP = new DefaultStartupStep();

@@ -4,6 +4,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 
+/**
+ * 概念展示，注解Bean定义
+ */
 public interface AnnotatedBeanDefinition extends BeanDefinition {
 
 	/**

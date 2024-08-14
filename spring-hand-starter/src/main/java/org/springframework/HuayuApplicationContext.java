@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * （弃用！！）
  * 这是以前写的最初版的容器，已经被我整合到了AnnotationConfigApplicationContext中,非重点
  */
 public class HuayuApplicationContext {

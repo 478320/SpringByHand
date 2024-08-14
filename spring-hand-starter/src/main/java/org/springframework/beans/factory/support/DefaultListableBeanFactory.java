@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * 非常重要，这是Spring的档案馆，用来管理Bean的定义信息，它的其中一个父类的Spring真正的Ioc容器，为了方便获取
+ * 我将这个Ioc容器设置为了protected，该子类可以轻松拿到并设置
  */
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements ConfigurableListableBeanFactory, BeanDefinitionRegistry {
 
@@ -35,6 +36,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return this.autowireCandidateResolver;
     }
 
+    /**
+     * 非关键
+     */
     public void setAutowireCandidateResolver(AutowireCandidateResolver autowireCandidateResolver) {
         if (autowireCandidateResolver instanceof BeanFactoryAware) {
             // 这里将自动注入的候选解析器的BeanFactory成功设置，将在Autowire时有所帮助
@@ -44,6 +48,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
 
+    /**
+     * 根据BeanName获取Bean的定义信息
+     *
+     * @param beanName Bean名称
+     * @return Bean定义信息
+     */
     @Override
     public BeanDefinition getBeanDefinition(String beanName) {
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
@@ -77,11 +87,21 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         }
     }
 
+    /**
+     * 删除Bean定义信息
+     * @param beanName Bean名称
+     */
     @Override
     public void removeBeanDefinition(String beanName) {
         beanDefinitionMap.remove(beanName);
     }
 
+    /**
+     * 判断Bean定义信息是否包含的方法
+     *
+     * @param beanName Bean名称
+     * @return 是否包含Bean定义信息的结果
+     */
     @Override
     public boolean containsBeanDefinition(String beanName) {
         return beanDefinitionMap.containsKey(beanName);

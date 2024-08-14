@@ -1,7 +1,7 @@
 package org.springframework.beans.factory.config;
 
 /**
- *
+ * Bean的拓展处理器
  */
 public interface BeanPostProcessor {
 

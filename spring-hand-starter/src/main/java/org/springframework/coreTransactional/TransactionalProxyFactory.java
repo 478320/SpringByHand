@@ -6,7 +6,7 @@ import org.springframework.annotationTransactional.Transactional;
 import java.lang.reflect.Method;
 
 /**
- * 废案别看
+ * （弃用！！）
  */
 public class TransactionalProxyFactory {
 

@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 
 /**
- *
+ * 概念展示
  */
 public class AnnotationTypeFilter implements TypeFilter{
 

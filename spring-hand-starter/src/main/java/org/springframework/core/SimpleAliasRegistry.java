@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * 概念展示，别名注册中心
  */
 public class SimpleAliasRegistry implements AliasRegistry{
 

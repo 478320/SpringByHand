@@ -48,6 +48,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             };
 
     // 装饰模式
+
+    /**
+     * 加载Bean定义信息
+     */
     @Override
     public int loadBeanDefinitions(Resource resource) {
         return loadBeanDefinitions(new EncodedResource(resource));
@@ -73,17 +77,21 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource) {
         // 将资源转换为Document方便后续处理，这里返回一个null不做实现
         Document doc = doLoadDocument(inputSource, resource);
+        //下面是关键真正注册Bean定义信息在这里
         int count = registerBeanDefinitions(doc, resource);
         return count;
 
 
     }
 
-    protected Document doLoadDocument(InputSource inputSource, Resource resource){
+    protected Document doLoadDocument(InputSource inputSource, Resource resource) {
         return null;
     }
 
-    public int registerBeanDefinitions(Document doc, Resource resource){
+    /**
+     * 注册Bean定义信息
+     */
+    public int registerBeanDefinitions(Document doc, Resource resource) {
         BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
         int countBefore = getRegistry().getBeanDefinitionCount();
         // 就在这里是关键，把XmlReaderContext创建并且把档案馆赋值给了上下文，从而方便后期真正解析后将值赋给档案馆

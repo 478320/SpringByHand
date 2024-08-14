@@ -1,7 +1,7 @@
 package org.springframework.beans.factory.support;
 
 /**
- *
+ * 普通的Bean定义信息
  */
 public class GenericBeanDefinition extends AbstractBeanDefinition{
 

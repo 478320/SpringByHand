@@ -10,7 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- *
+ * 概念展示，注解配置的工具类
  */
 public abstract class AnnotationConfigUtils {
 

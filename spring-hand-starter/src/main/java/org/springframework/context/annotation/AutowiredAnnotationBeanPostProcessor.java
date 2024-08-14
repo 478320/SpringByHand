@@ -6,7 +6,7 @@ import org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostP
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 
 /**
- *
+ * 概念展示，自动注入的BeanPostProcessor
  */
 public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationAwareBeanPostProcessor,
         MergedBeanDefinitionPostProcessor, BeanFactoryAware {

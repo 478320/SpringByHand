@@ -4,9 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- *
+ * 切入点实现类
  */
-public class JoinPoint implements IJoinPoint{
+public class JoinPoint implements IJoinPoint {
 
     protected final Method method;
 

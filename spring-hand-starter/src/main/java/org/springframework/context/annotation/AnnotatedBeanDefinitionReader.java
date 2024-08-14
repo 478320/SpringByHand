@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.function.Supplier;
 
 /**
- *
+ * 概念展示，注解Bean定义的读取器
  */
 public class AnnotatedBeanDefinitionReader {
 

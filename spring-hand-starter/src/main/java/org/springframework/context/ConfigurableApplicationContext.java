@@ -4,7 +4,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.metrics.ApplicationStartup;
 
 /**
- *
+ * 可配置的容器上下文
  */
 public interface ConfigurableApplicationContext extends ApplicationContext{
 

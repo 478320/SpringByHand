@@ -5,7 +5,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.support.BeanDefinitionRegistry;
 
 /**
- *
+ * 概念展示，Bean定义的读取器接口
  */
 public interface BeanDefinitionReader {
     BeanDefinitionRegistry getRegistry();

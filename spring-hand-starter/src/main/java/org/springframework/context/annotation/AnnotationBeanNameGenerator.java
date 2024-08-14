@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 概念展示，注解Bean名称生成器
+ */
 public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	/**

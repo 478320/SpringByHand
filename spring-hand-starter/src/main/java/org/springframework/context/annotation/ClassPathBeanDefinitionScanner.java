@@ -4,7 +4,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.support.BeanDefinitionRegistry;
 
 /**
- *
+ * 概念展示，类路径扫描者
  */
 public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateComponentProvider{
 

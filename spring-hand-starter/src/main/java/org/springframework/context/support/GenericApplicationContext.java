@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- *
+ * 普通的注解容器上下文（重要），这里集成了档案馆
  */
 public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
 

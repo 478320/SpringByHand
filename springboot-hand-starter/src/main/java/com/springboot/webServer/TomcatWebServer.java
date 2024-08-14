@@ -11,9 +11,9 @@ import org.huayu.web.context.AnnotationConfigWebApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- *
+ * tomcat服务实现类
  */
-public class TomcatWebServer implements WebServer{
+public class TomcatWebServer implements WebServer {
     @Override
     public void start(AnnotationConfigWebApplicationContext applicationContext) {
         Tomcat tomcat = new Tomcat();
@@ -41,8 +41,8 @@ public class TomcatWebServer implements WebServer{
         service.addConnector(connector);
 
         //添加servlet用于处理请求
-        tomcat.addServlet(contextPath,"dispatcher",new DispatcherServlet(applicationContext));
-        context.addServletMappingDecoded("/*","dispatcher");
+        tomcat.addServlet(contextPath, "dispatcher", new DispatcherServlet(applicationContext));
+        context.addServletMappingDecoded("/*", "dispatcher");
 
         try {
             tomcat.start();

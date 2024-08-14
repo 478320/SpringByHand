@@ -1,7 +1,7 @@
 package org.springframework;
 
 /**
- *
+ * （弃用！！）
  */
 public class HuayuBeanDefinition {
 

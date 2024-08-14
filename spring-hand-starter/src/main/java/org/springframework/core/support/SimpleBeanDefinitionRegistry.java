@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
+ * （重要）真正的Ioc容器
  */
 public class SimpleBeanDefinitionRegistry extends SimpleAliasRegistry implements BeanDefinitionRegistry{
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();

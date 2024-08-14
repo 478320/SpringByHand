@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * 抽象的资源读取器，负责获取到加载的资源同时给档案馆赋值
+ * 概念展示，抽象的资源读取器，负责获取到加载的资源同时给档案馆赋值
  */
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader{
 
@@ -29,6 +29,10 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
         this.resourceLoader = resourceLoader;
     }
 
+    /**
+     * 获取到档案馆并进行一些处理
+     * @param registry 档案馆实例
+     */
     protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
         // 设置档案馆
         this.registry = registry;
@@ -45,16 +49,22 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
         // TODO 源码还涉及一些环境的内容不多做介绍
     }
 
+    /**
+     * 加载Bean定义信息的具体方法
+     *
+     * @param resources 资源
+     */
     @Override
     public int loadBeanDefinitions(Resource... resources){
         int count = 0;
         for (Resource resource : resources) {
+            // 调用子类的加载Bean定义信息
             count += loadBeanDefinitions(resource);
         }
         return count;
     }
 
-    // 加载bean的定义信息
+    // 加载bean的定义信息，下面都是一些源码主要都是在加载Bean的定义信息
     @Override
     public int loadBeanDefinitions(String location){
         return loadBeanDefinitions(location, null);

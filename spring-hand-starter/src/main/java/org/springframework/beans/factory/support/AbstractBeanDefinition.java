@@ -3,7 +3,7 @@ package org.springframework.beans.factory.support;
 import org.springframework.beans.factory.config.BeanDefinition;
 
 /**
- *
+ * 抽象的Bean定义类
  */
 public abstract class AbstractBeanDefinition implements BeanDefinition {
 

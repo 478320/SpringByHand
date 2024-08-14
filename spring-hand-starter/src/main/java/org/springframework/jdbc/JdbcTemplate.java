@@ -13,6 +13,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
+/**
+ * 数据库处理包装类，未使用事务需要手动关闭
+ */
 public class JdbcTemplate {
 
     @Override
@@ -82,9 +85,9 @@ public class JdbcTemplate {
     public List<Object> executeQuery(String sql, Object[] values, RowMapper rowMapper) throws Exception {
         Connection connection;
         //创建连接
-        if (transactionalManager == null){
+        if (transactionalManager == null) {
             connection = dataSource.getConnection();
-        }else {
+        } else {
             connection = transactionalManager.getConnection();
         }
         //创建语句集
@@ -102,12 +105,12 @@ public class JdbcTemplate {
         return objects;
     }
 
-    public int update(String sql ) throws SQLException {
+    public int update(String sql) throws SQLException {
         //创建连接
         Connection connection;
-        if (transactionalManager == null){
+        if (transactionalManager == null) {
             connection = dataSource.getConnection();
-        }else {
+        } else {
             connection = transactionalManager.getConnection();
         }
         //创建语句集

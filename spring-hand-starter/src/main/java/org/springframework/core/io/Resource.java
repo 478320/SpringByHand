@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * 概念展示，顶层资源接口
  */
 public interface Resource {
 

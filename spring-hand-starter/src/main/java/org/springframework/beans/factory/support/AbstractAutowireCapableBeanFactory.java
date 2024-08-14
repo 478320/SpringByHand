@@ -3,7 +3,7 @@ package org.springframework.beans.factory.support;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 /**
- *
+ * 档案馆DefaultListableBeanFactory的父类
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 

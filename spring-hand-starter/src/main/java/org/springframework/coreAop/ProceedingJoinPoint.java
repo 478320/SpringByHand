@@ -5,9 +5,9 @@ import net.sf.cglib.proxy.MethodProxy;
 import java.lang.reflect.Method;
 
 /**
- *
+ * 切入点增强实现类（重要）
  */
-public class ProceedingJoinPoint extends JoinPoint{
+public class ProceedingJoinPoint extends JoinPoint {
 
     private final Object targetObject;
 
@@ -20,13 +20,19 @@ public class ProceedingJoinPoint extends JoinPoint{
         this.methodProxy = methodProxy;
     }
 
+    /**
+     * 执行目标对象原方法
+     */
     @Override
     public Object invoke() throws Throwable {
-        return method.invoke(targetObject,getArgs());
+        return method.invoke(targetObject, getArgs());
     }
 
+    /**
+     * 执行目标对象原方法
+     */
     @Override
     public Object invoke(Object[] args) throws Throwable {
-        return method.invoke(targetObject,args);
+        return method.invoke(targetObject, args);
     }
 }

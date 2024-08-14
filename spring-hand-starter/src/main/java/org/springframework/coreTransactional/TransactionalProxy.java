@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 废案别看
+ * （弃用！！）
  */
 public class TransactionalProxy implements MethodInterceptor {
 

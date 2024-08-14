@@ -5,7 +5,7 @@ import org.springframework.beans.factory.config.BeanFactory;
 import org.springframework.beans.factory.support.SimpleAutowireCandidateResolver;
 
 /**
- *
+ * 概念展示
  */
 public class GenericTypeAwareAutowireCandidateResolver extends SimpleAutowireCandidateResolver implements BeanFactoryAware {
 
