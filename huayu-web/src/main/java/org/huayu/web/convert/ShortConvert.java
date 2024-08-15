@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * Short类型转换器
  */
 public class ShortConvert extends Convert<Short>{
 

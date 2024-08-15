@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- *
+ * 自定义文件类型接口
  */
 public interface MultipartFile extends InputStreamSource {
 

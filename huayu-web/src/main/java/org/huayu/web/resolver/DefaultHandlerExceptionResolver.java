@@ -17,6 +17,10 @@ import java.io.IOException;
 public class DefaultHandlerExceptionResolver implements HandlerExceptionResolver{
 
     private int order;
+
+    /**
+     * 根据异常类型返回前端对应异常
+     */
     @Override
     public Boolean resolveException(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler, Exception ex) throws IOException {
 

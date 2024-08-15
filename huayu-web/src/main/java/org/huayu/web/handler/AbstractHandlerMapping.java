@@ -17,31 +17,43 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- *
+ * 抽象映射器类
  */
 public abstract class AbstractHandlerMapping extends ApplicationObjectSupport implements HandlerMapping, InitializingBean {
 
     protected int order;
 
+    // 映射器注册中心
     protected MapperRegister mapperRegister = new MapperRegister();
 
     private List<HandlerInterceptor> handlerInterceptors = new ArrayList<>();
 
+    /**
+     * 添加拦截器
+     */
     public void addHandlerInterceptors(List<MappedInterceptor> handlerInterceptors) {
         this.handlerInterceptors.addAll(handlerInterceptors);
     }
 
+    /**
+     * 获取请求对应的HandlerExecutionChain
+     */
     @Override
     public HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+        // 获取请求对应的HandlerMethod
         final HandlerMethod handlerMethod = getHandlerInternal(request);
-        if(ObjectUtils.isEmpty(handlerMethod)) {return null;}
+        if (ObjectUtils.isEmpty(handlerMethod)) {
+            return null;
+        }
+        // 封装对象
         final HandlerExecutionChain executionChain = new HandlerExecutionChain(handlerMethod);
-
         executionChain.setHandlerInterceptors(handlerInterceptors);
-
         return executionChain;
     }
 
+    /**
+     * 根据路径获取HandlerMethod
+     */
     protected HandlerMethod lockUpPath(HttpServletRequest request) throws Exception {
         // 1.获取请求路径 请求类型
         HandlerMethod handlerMethod = null;
@@ -61,7 +73,7 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
                     flag = true;
                     Set<HandlerMethod> handlerMethods = fuzzyMatchingPath.get(path);
                     handlerMethod = getHandlerMethod(handlerMethods, request);
-                    if (!ObjectUtils.isEmpty(handlerMethod)){
+                    if (!ObjectUtils.isEmpty(handlerMethod)) {
                         return handlerMethod;
                     }
                 }
@@ -71,12 +83,12 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
         // 3.精确匹配直接查找
         if (accurateMatchingPath.containsKey(requestPath)) {
             flag = true;
-            handlerMethod = getHandlerMethod(accurateMatchingPath.get(requestPath),request);
-            if (!ObjectUtils.isEmpty(handlerMethod)){
+            handlerMethod = getHandlerMethod(accurateMatchingPath.get(requestPath), request);
+            if (!ObjectUtils.isEmpty(handlerMethod)) {
                 return handlerMethod;
             }
         }
-        if (flag){
+        if (flag) {
             // 请求类型不匹配
             throw new HttpRequestMethodNotSupport(requestPath + "请求类型不匹配");
         }
@@ -84,12 +96,14 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
         return null;
     }
 
+    /**
+     * 根据请求类型来获取处理器方法
+     */
     protected HandlerMethod getHandlerMethod(Set<HandlerMethod> handlerMethods, HttpServletRequest request) throws Exception {
         final String requestPath = request.getRequestURI();
         final String requestMethod = request.getMethod();
         for (HandlerMethod handlerMethod : handlerMethods) {
             // RequestMapping 接受任意请求
-
             // GetMapping 接受get
             // DeleteMapping 接受delete
             for (RequestMethod method : handlerMethod.getRequestMethods()) {
@@ -113,12 +127,17 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
         return 0;
     }
 
-    //找到所有的HandlerMethod
+    /**
+     * 初始化映射器
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         initHandlerMethod();
     }
 
+    /**
+     * 初始化处理器方法
+     */
     private void initHandlerMethod() throws Exception {
         //获取所有bean
         final ApplicationContext context = obtainApplicationContext();
@@ -131,25 +150,31 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            //判断是否是一个handler -> 交给子类
             if (type != null && isHandler(type)) {
+                //找到bean当中的HandlerMethod -> 交给子类
                 detectHandlerMethod(name);
             }
         }
-        //判断是否是一个handler -> 交给子类
 
-        //找到bean当中的HandlerMethod -> 交给子类
     }
 
     protected abstract void detectHandlerMethod(String name) throws Exception;
 
     protected abstract boolean isHandler(Class type);
 
+    /**
+     * 注册处理器方法到内部类中
+     */
     protected void registerMappers(List<HandlerMethod> handlerMethods) throws Exception {
         for (HandlerMethod handlerMethod : handlerMethods) {
             mapperRegister.register(handlerMethod);
         }
     }
 
+    /**
+     * 注册处理器方法到内部类中
+     */
     protected void registerMapper(HandlerMethod handlerMethod) throws Exception {
         mapperRegister.register(handlerMethod);
     }
@@ -161,7 +186,7 @@ public abstract class AbstractHandlerMapping extends ApplicationObjectSupport im
         //精确路径,因为不同的路径请求的方式可能不一样，为了方便未来判断路径是否重复，选择使用Set集合报错比较好判断
         Map<String, Set<HandlerMethod>> accurateMatchingPath = new HashMap<>();
 
-        //模糊匹配,TODO 需要倒序，否则出现多个正则表达式匹配的优先级未知，可能出现匹配错误的情况
+        //模糊匹配
         Map<String, Set<HandlerMethod>> fuzzyMatchingPath = new HashMap<>();
 
         public void register(HandlerMethod handlerMethod) throws Exception {

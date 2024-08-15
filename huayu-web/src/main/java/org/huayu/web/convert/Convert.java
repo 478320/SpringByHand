@@ -1,5 +1,9 @@
 package org.huayu.web.convert;
 
+/**
+ * 类型转换器抽象类
+ * @param <T>
+ */
 public abstract class Convert<T> {
 
     protected Class<T> type;

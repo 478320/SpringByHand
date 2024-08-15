@@ -1,7 +1,7 @@
 package org.huayu.web.excpetion;
 
 /**
- *
+ * 没找到映射路径对应的方法异常
  */
 public class NotFoundExcpetion extends Exception{
 

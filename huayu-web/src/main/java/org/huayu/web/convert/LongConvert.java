@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * Long类型转换器
  */
 public class LongConvert extends Convert<Long>{
 

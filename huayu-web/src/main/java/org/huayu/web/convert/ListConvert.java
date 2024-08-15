@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- *
+ * List类型转换器
  */
 public class ListConvert extends Convert<ArrayList>{
 

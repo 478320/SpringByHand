@@ -4,7 +4,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- *
+ * 可配置的Web容器接口
  */
 public interface ConfigurableWebApplicationContext extends WebApplicationContext{
 

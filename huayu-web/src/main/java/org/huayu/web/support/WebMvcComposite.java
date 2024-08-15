@@ -16,6 +16,9 @@ public class WebMvcComposite implements WebMvcConfigurer {
         this.webMvcConfigurers.addAll(webMvcConfigurers);
     }
 
+    /**
+     * 遍历用户所有的自定义配置类，将所有的拦截器放到注册中心中
+     */
     @Override
     public void addIntercept(InterceptorRegistry registry) {
         for (WebMvcConfigurer webMvcConfigurer : webMvcConfigurers) {

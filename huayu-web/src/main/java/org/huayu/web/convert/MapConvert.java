@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Map类型转换器
  */
 public class MapConvert extends Convert<HashMap>{
 

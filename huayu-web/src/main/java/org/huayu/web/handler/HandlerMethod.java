@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- *
+ * 处理器方法类
  */
 public class HandlerMethod {
 
@@ -30,8 +30,10 @@ public class HandlerMethod {
     // spring提供的增强的参数
     protected MethodParameter[] parameters = new MethodParameter[0];
 
+    // 异常处理器
     private Map<Class,ExceptionHandlerMethod> exceptionHandlerMethodMap = new HashMap<>();
 
+    // 类型转换器
     private Map<Class, ConvertHandler> convertHandlerMap = new HashMap<>();
 
     public Map<Class, ConvertHandler> getConvertHandlerMap() {

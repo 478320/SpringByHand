@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * 类型转换器组合器
  */
 public class ConvertComposite {
 
@@ -20,7 +20,7 @@ public class ConvertComposite {
     }
 
     public Object convert(HandlerMethod handlerMethod,Class<?> parameterType, Object result) throws Exception {
-        // 先执行局部的
+        // 先执行局部的，获取Controller中的类型转换器
         final Map<Class, ConvertHandler> convertHandlerMap = handlerMethod.getConvertHandlerMap();
         if (!ObjectUtils.isEmpty(convertHandlerMap)){
             final ConvertHandler convertHandler = convertHandlerMap.get(parameterType);
@@ -28,7 +28,7 @@ public class ConvertComposite {
                 return convertHandler.convert(result);
             }
         }
-        // 全局的
+        // 全局的，从初始化的类型转换器中拿
         if (convertMap.containsKey(parameterType)) {
             final ConvertHandler convertHandler = convertMap.get(parameterType);
             try {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 映射器执行链类
  */
 public class HandlerExecutionChain {
 

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- *
+ * Set类型转换器
  */
 public class SetConvert extends Convert<HashSet>{
 

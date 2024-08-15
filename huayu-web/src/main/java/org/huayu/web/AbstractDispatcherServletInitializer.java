@@ -12,7 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 
 /**
- * 创建DispatcherServlet以及初始化Ioc
+ * Web容器初始化器抽象类，创建DispatcherServlet以及初始化Ioc都在这里进行
  */
 public abstract class AbstractDispatcherServletInitializer implements WebApplicationInitializer{
 
@@ -31,7 +31,7 @@ public abstract class AbstractDispatcherServletInitializer implements WebApplica
         rootApplicationContext.refresh();
         //创建子容器
         final WebApplicationContext webAppContext = createWebApplicationContext();
-        //创建DispatcherServlet
+        //创建DispatcherServlet，这里很关键我们可以在这里跟进
         DispatcherServlet dispatcherServlet = new DispatcherServlet(webAppContext);
         ServletRegistration.Dynamic dynamic = servletContext.addServlet(DEFAULT_SERVLET_NAME, dispatcherServlet);
         //配置文件

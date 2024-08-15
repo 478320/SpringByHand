@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 参数解析器组合器
  */
 public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgumentResolver{
 
@@ -20,6 +20,9 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
     //避免参数解析器被不断遍历
     Map<MethodParameter,HandlerMethodArgumentResolver> argumentResolverCache = new HashMap<>();
 
+    /**
+     * 判断是否支持该参数
+     */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         for (HandlerMethodArgumentResolver resolver : this.resolvers) {
@@ -36,6 +39,9 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
         return argumentResolverCache.get(parameter);
     }
 
+    /**
+     * 获取参数解析器解析参数
+     */
     @Override
     public Object resolveArgument(MethodParameter parameter, HandlerMethod handlerMethod, WebServletRequest webServletRequest, ConvertComposite convertComposite) throws Exception {
 

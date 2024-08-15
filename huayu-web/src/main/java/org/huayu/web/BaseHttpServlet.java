@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 /**
- *
+ * HttpServlet抽象接口
  */
 public abstract class BaseHttpServlet extends HttpServlet {
 
@@ -22,7 +22,9 @@ public abstract class BaseHttpServlet extends HttpServlet {
         this.webApplicationContext = webApplicationContext;
     }
 
-    //webioc初始化以及配置
+    /**
+     * webioc初始化以及配置，该方法会在实体类被创建后自动调用
+     */
     @Override
     public void init() throws ServletException {
         //父子容器
@@ -46,7 +48,12 @@ public abstract class BaseHttpServlet extends HttpServlet {
                 wac.refresh();
             }
         }
+        // 我们定义的拓展点，我们可以在这里新增DispatcherServlet的初始化过程
         onRefresh(webApplicationContext);
     }
+
+    /**
+     * 自定义的DispatcherServlet拓展点，用于初始化组件
+     */
     protected abstract void onRefresh(ApplicationContext webApplicationContext);
 }

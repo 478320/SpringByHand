@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * String类型转换器
  */
 public class StringConvert extends Convert<String>{
 

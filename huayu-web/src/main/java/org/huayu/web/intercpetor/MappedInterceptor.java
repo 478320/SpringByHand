@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 路径拦截器，可以拦截对应路径下的方法
  */
 public class MappedInterceptor implements HandlerInterceptor{
 

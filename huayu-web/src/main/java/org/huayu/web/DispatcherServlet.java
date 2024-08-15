@@ -24,16 +24,19 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
+ * 自定义的Servlet在MVC中起到关键作用
  */
 public class DispatcherServlet extends BaseHttpServlet {
 
+    // 映射器
     private List<HandlerMapping> handlerMappings = new ArrayList<>();
 
+    // 适配器
     private List<HandlerMethodAdapter> handlerMethodAdapters = new ArrayList<>();
 
     private Properties defaultStrategies;
 
+    // 异常处理器
     private List<HandlerExceptionResolver> handlerExceptionResolvers = new ArrayList<>();
 
     public static final String DEFAULT_STRATEGIES_PATH = "DispatcherServlet.properties";
@@ -42,7 +45,9 @@ public class DispatcherServlet extends BaseHttpServlet {
         super(webApplicationContext);
     }
 
-    //组件初始化
+    /**
+     * 初始化DispatcherServlet的映射器，适配器，异常处理器
+     */
     @Override
     protected void onRefresh(ApplicationContext webApplicationContext) {
         initHandlerMapping(webApplicationContext);
@@ -50,7 +55,9 @@ public class DispatcherServlet extends BaseHttpServlet {
         initHandlerException(webApplicationContext);
     }
 
-    //初始化异常解析器
+    /**
+     * 初始化异常解析器
+     */
     private void initHandlerException(ApplicationContext webApplicationContext) {
         //从容器中拿
         final Map<String, HandlerExceptionResolver> map = BeanFactoryUtils.beansOfTypeIncludingAncestors(webApplicationContext, HandlerExceptionResolver.class, true, false);
@@ -63,7 +70,9 @@ public class DispatcherServlet extends BaseHttpServlet {
         this.handlerExceptionResolvers.sort(Comparator.comparingInt(Ordered::getOrder));
     }
 
-    // 初始化适配器
+    /**
+     * 初始化适配器
+     */
     private void initHandlerAdapter(ApplicationContext webApplicationContext) {
         //从容器中拿
         final Map<String, HandlerMethodAdapter> map = BeanFactoryUtils.beansOfTypeIncludingAncestors(webApplicationContext, HandlerMethodAdapter.class, true, false);
@@ -76,6 +85,9 @@ public class DispatcherServlet extends BaseHttpServlet {
         this.handlerMethodAdapters.sort(Comparator.comparingInt(Ordered::getOrder));
     }
 
+    /**
+     * 初始话映射器
+     */
     private void initHandlerMapping(ApplicationContext webApplicationContext) {
         //从容器中拿
         final Map<String, HandlerMapping> map = BeanFactoryUtils.beansOfTypeIncludingAncestors(webApplicationContext, HandlerMapping.class, true, false);
@@ -143,15 +155,15 @@ public class DispatcherServlet extends BaseHttpServlet {
                 return;
             }
 
-            handlerExecutionChain.afterCompletion(req,resp,handlerExecutionChain.getHandlerMethod(),ex);
+            handlerExecutionChain.afterCompletion(req, resp, handlerExecutionChain.getHandlerMethod(), ex);
 
             // 获得适配器
             HandlerMethodAdapter ha = getHandlerMethodAdapter(handlerExecutionChain.getHandlerMethod());
-            if (!handlerExecutionChain.applyPreInterceptor(req,resp)) {
+            if (!handlerExecutionChain.applyPreInterceptor(req, resp)) {
                 return;
             }
             ha.handler(req, resp, handlerExecutionChain.getHandlerMethod());
-            handlerExecutionChain.applyPostInterceptor(req,resp);
+            handlerExecutionChain.applyPostInterceptor(req, resp);
         } catch (Exception e) {
             ex = e;
         }
@@ -165,9 +177,9 @@ public class DispatcherServlet extends BaseHttpServlet {
 
     private void processResult(HttpServletRequest req, HttpServletResponse resp, HandlerExecutionChain handlerExecutionChain, Exception ex) throws Exception {
 
-        if (ex!=null){
-            HandlerMethod handlerMethod = handlerExecutionChain == null ? null :handlerExecutionChain.getHandlerMethod();
-            processResultException(req,resp,handlerMethod,ex);
+        if (ex != null) {
+            HandlerMethod handlerMethod = handlerExecutionChain == null ? null : handlerExecutionChain.getHandlerMethod();
+            processResultException(req, resp, handlerMethod, ex);
         }
         // after todo 拦截器
     }
@@ -175,7 +187,7 @@ public class DispatcherServlet extends BaseHttpServlet {
     private void processResultException(HttpServletRequest req, HttpServletResponse resp, HandlerMethod handlerMethod, Exception ex) throws Exception {
 
         for (HandlerExceptionResolver handlerExceptionResolver : this.handlerExceptionResolvers) {
-            if (handlerExceptionResolver.resolveException(req,resp,handlerMethod,ex)) {
+            if (handlerExceptionResolver.resolveException(req, resp, handlerMethod, ex)) {
                 return;
             }
         }

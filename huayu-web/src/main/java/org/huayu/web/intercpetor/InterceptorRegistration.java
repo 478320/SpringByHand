@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 封装拦截器信息
+ * 封装拦截器信息类
  */
 public class InterceptorRegistration {
 

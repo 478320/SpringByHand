@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 返回值处理器组合器
  */
 public class HandlerMethodReturnValueHandlerComposite {
 
@@ -18,6 +18,9 @@ public class HandlerMethodReturnValueHandlerComposite {
         this.methodReturnValueHandlers.addAll(methodReturnValueHandlers);
     }
 
+    /**
+     * 选择返回值处理器
+     */
     public HandlerMethodReturnValueHandler selectHandler(Method method) throws Exception {
         for (HandlerMethodReturnValueHandler returnValueHandler : this.methodReturnValueHandlers) {
             if (returnValueHandler.supportsReturnType(method)) {
@@ -27,6 +30,9 @@ public class HandlerMethodReturnValueHandlerComposite {
         throw new NotFoundExcpetion(method.toString() + "找不到返回值处理器");
     }
 
+    /**
+     * 处理返回值
+     */
     public void doInvoke(Object returnValue, Method method, WebServletRequest webServletRequest) throws Exception {
         //选择返回值处理器
         final HandlerMethodReturnValueHandler returnValueHandler = selectHandler(method);

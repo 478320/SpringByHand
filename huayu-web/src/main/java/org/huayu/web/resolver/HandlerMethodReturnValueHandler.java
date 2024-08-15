@@ -5,7 +5,7 @@ import org.huayu.web.support.WebServletRequest;
 import java.lang.reflect.Method;
 
 /**
- *
+ * 返回值处理器顶层接口
  */
 public interface HandlerMethodReturnValueHandler {
 

@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * Float类型转换器
  */
 public class FloatConvert extends Convert<Float>{
 

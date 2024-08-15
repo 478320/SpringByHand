@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * Integer类型转换器
  */
 public class IntegerConvert extends Convert<Integer>{
 

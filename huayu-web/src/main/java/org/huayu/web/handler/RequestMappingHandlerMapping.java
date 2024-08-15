@@ -20,17 +20,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 映射器实现类，个人感觉重要程度仅次于DispatcherServlet
  */
 public class RequestMappingHandlerMapping extends AbstractHandlerMapping {
 
 
-    //根据路径去放回HandlerMethod
+    /**
+     * 获得request对应的内部处理器方法
+     */
     @Override
     protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
         return lockUpPath(request);
     }
 
+    /**
+     * 检查处理器并注册处理器方法
+     */
     @Override
     protected void detectHandlerMethod(String name) throws Exception {
         // 获取当前类

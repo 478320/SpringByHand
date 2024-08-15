@@ -7,13 +7,14 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- *
+ * 自定义Servlet的增强器
  */
 public class ServletBeanPostProcess implements BeanPostProcessor {
 
     private ServletContext servletContext;
 
     private ServletConfig servletConfig;
+
     public ServletBeanPostProcess(ServletContext servletContext, ServletConfig servletConfig) {
         this.servletConfig = servletConfig;
         this.servletContext = servletContext;

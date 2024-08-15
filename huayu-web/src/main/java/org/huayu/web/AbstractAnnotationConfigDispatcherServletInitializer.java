@@ -10,7 +10,7 @@ import org.springframework.util.ObjectUtils;
 import javax.servlet.Filter;
 
 /**
- *
+ * WebApplicationInitializer的子类，用于获取到父子容器的配置，具体实现类由用户实现
  */
 public abstract class AbstractAnnotationConfigDispatcherServletInitializer extends AbstractDispatcherServletInitializer{
     @Override

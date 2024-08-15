@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- *
+ * 自定义标注的文件类
  */
 public class StandardMultipartFile  implements MultipartFile, Serializable {
 

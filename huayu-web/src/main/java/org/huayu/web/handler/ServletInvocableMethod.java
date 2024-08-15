@@ -19,12 +19,16 @@ public class ServletInvocableMethod extends HandlerMethod{
 
     private HandlerMethod handlerMethod;
 
+    // 参数解析器组合器
     private HandlerMethodArgumentResolverComposite resolverComposite = new HandlerMethodArgumentResolverComposite();
 
+    // 类型转换器组合器
     private ConvertComposite convertComposite = new ConvertComposite();
 
+    // 参数名称注册发现
     private ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
+    // 返回值处理器
     private HandlerMethodReturnValueHandlerComposite returnValueHandlerComposite = new HandlerMethodReturnValueHandlerComposite();
 
     public void setReturnValueHandlerComposite(HandlerMethodReturnValueHandlerComposite returnValueHandlerComposite) {
@@ -50,6 +54,9 @@ public class ServletInvocableMethod extends HandlerMethod{
         this.handlerMethod = handlerMethod;
     }
 
+    /**
+     * 执行方法逻辑
+     */
     public void invokeAndHandle(WebServletRequest webServletRequest, HandlerMethod handler,Object... providerArgs) throws Exception {
 
         // 1.获取参数
@@ -60,6 +67,9 @@ public class ServletInvocableMethod extends HandlerMethod{
         this.returnValueHandlerComposite.doInvoke(returnValue,handler.getMethod(),webServletRequest);
     }
 
+    /**
+     * 获得方法的参数
+     */
     public Object[] getMethodArguments(WebServletRequest webServletRequest,HandlerMethod handlerMethod,Object... providerArgs) throws Exception {
         final MethodParameter[] parameters = handlerMethod.getParameters();
         Object args[] = new Object[parameters.length];
@@ -81,6 +91,9 @@ public class ServletInvocableMethod extends HandlerMethod{
         return args;
     }
 
+    /**
+     * 发现参数
+     */
     private Object findProviderArgs(MethodParameter parameter, Object[] providerArgs) {
 
         final Class<?> parameterType = parameter.getParameterType();
@@ -93,6 +106,9 @@ public class ServletInvocableMethod extends HandlerMethod{
         return null;
     }
 
+    /**
+     * 执行方法
+     */
     public Object doInvoke(Object args[]) throws Exception {
         final Object returnValue = this.handlerMethod.getMethod().invoke(this.handlerMethod.getBean(), args);
         return returnValue;

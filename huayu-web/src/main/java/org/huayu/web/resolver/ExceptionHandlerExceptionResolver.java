@@ -22,17 +22,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 用户自定义异常处理器
  */
 public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport implements HandlerExceptionResolver, InitializingBean {
 
 
     private int order;
 
-    private Map<Class,ExceptionHandlerMethod> exceptionHandlerMethodMap = new HashMap<>();
+    // 异常处理器方法
+    private Map<Class, ExceptionHandlerMethod> exceptionHandlerMethodMap = new HashMap<>();
 
+    // 参数解析器组合器
     private HandlerMethodArgumentResolverComposite resolverComposite = new HandlerMethodArgumentResolverComposite();
 
+    // 返回值处理器组合器
     private HandlerMethodReturnValueHandlerComposite returnValueHandlerComposite = new HandlerMethodReturnValueHandlerComposite();
 
     public void setOrder(int order) {
@@ -40,10 +43,13 @@ public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport 
     }
 
 
+    /**
+     * 处理异常
+     */
     @Override
     public Boolean resolveException(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler, Exception ex) throws Exception {
         final ExceptionHandlerMethod exceptionHandlerMethod = getExceptionHandlerMethod(handler, ex);
-        if (!ObjectUtils.isEmpty(exceptionHandlerMethod)){
+        if (!ObjectUtils.isEmpty(exceptionHandlerMethod)) {
 
             final WebServletRequest webServletRequest = new WebServletRequest(request, response);
             final ServletInvocableMethod servletInvocableMethod = new ServletInvocableMethod();
@@ -51,32 +57,35 @@ public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport 
             servletInvocableMethod.setResolverComposite(resolverComposite);
             servletInvocableMethod.setReturnValueHandlerComposite(returnValueHandlerComposite);
             servletInvocableMethod.setHandlerMethod(exceptionHandlerMethod);
-            servletInvocableMethod.invokeAndHandle(webServletRequest,exceptionHandlerMethod,ex);
+            servletInvocableMethod.invokeAndHandle(webServletRequest, exceptionHandlerMethod, ex);
             return true;
         }
         return false;
     }
 
-    public ExceptionHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod,Exception ex) {
+    /**
+     * 获取到异常方法
+     */
+    public ExceptionHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception ex) {
         Class aClass = ex.getClass();
         ExceptionHandlerMethod exceptionHandlerMethod = null;
         // 找局部
-        if (handlerMethod!=null && handlerMethod.getExceptionHandlerMethodMap().size()!=0){
+        if (handlerMethod != null && handlerMethod.getExceptionHandlerMethodMap().size() != 0) {
             Map<Class, ExceptionHandlerMethod> exMap = handlerMethod.getExceptionHandlerMethodMap();
-            while (exceptionHandlerMethod == null){
+            while (exceptionHandlerMethod == null) {
                 exceptionHandlerMethod = exMap.get(aClass);
                 aClass = aClass.getSuperclass();
-                if (aClass == Throwable.class && exceptionHandlerMethod == null){
+                if (aClass == Throwable.class && exceptionHandlerMethod == null) {
                     break;
                 }
             }
         }
         aClass = ex.getClass();
-        // 找全局，但是这里被初始化过，所以在这里可以找到对应的局部异常处理器
-        while (exceptionHandlerMethod == null){
+        // 找全局
+        while (exceptionHandlerMethod == null) {
             exceptionHandlerMethod = this.exceptionHandlerMethodMap.get(aClass);
             aClass = aClass.getSuperclass();
-            if (aClass == Throwable.class && exceptionHandlerMethod == null){
+            if (aClass == Throwable.class && exceptionHandlerMethod == null) {
                 break;
             }
         }
@@ -89,7 +98,9 @@ public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport 
         return 0;
     }
 
-    // 初始化基础组件
+    /**
+     * 初始化基础组件
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         exceptionHandlerMethodMap.putAll(initExceptionHandler());
@@ -97,23 +108,30 @@ public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport 
         returnValueHandlerComposite.addMethodReturnValueHandlers(getDefaultMethodReturnValueHandler());
     }
 
-    //初始化参数解析器
-    public List<HandlerMethodArgumentResolver> getDefaultArgumentResolver(){
+    /**
+     * 初始化参数解析器
+     */
+    public List<HandlerMethodArgumentResolver> getDefaultArgumentResolver() {
         final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
         resolvers.add(new ServletRequestMethodArgumentResolver());
         resolvers.add(new ServletResponseMethodArgumentResolver());
         return resolvers;
     }
-    // 初始化返回值处理器
-    public List<HandlerMethodReturnValueHandler> getDefaultMethodReturnValueHandler(){
+
+    /**
+     * 初始化返回值处理器
+     */
+    public List<HandlerMethodReturnValueHandler> getDefaultMethodReturnValueHandler() {
         final ArrayList<HandlerMethodReturnValueHandler> handlerMethodReturnValueHandlers = new ArrayList<>();
         handlerMethodReturnValueHandlers.add(new RequestResponseBodyMethodReturnValueHandler());
         return handlerMethodReturnValueHandlers;
 
     }
 
-    // 初始化异常解析器
-    public Map<Class, ExceptionHandlerMethod> initExceptionHandler(){
+    /**
+     * 初始化异常解析器
+     */
+    public Map<Class, ExceptionHandlerMethod> initExceptionHandler() {
         final ApplicationContext context = obtainApplicationContext();
         Map<Class, ExceptionHandlerMethod> exceptionHandlerMethodMap = new HashMap<>();
         // 从容器当中拿带有ControllerAdvice Bean
@@ -122,11 +140,11 @@ public class ExceptionHandlerExceptionResolver extends ApplicationObjectSupport 
             final Class<?> type = context.getType(name);
             final Method[] methods = type.getDeclaredMethods();
             for (Method method : methods) {
-                if(AnnotatedElementUtils.hasAnnotation(method, ExceptionHandler.class)){
+                if (AnnotatedElementUtils.hasAnnotation(method, ExceptionHandler.class)) {
                     final ExceptionHandler exceptionHandler = AnnotatedElementUtils.findMergedAnnotation(method, ExceptionHandler.class);
                     final Class<? extends Throwable> exType = exceptionHandler.value();
                     // 收集
-                    exceptionHandlerMethodMap.put(exType,new ExceptionHandlerMethod(context.getBean(name),method));
+                    exceptionHandlerMethodMap.put(exType, new ExceptionHandlerMethod(context.getBean(name), method));
                 }
             }
         }

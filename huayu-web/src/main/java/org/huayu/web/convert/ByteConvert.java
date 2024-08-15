@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * byte类型转换器
  */
 public class ByteConvert extends Convert<Byte> {
 

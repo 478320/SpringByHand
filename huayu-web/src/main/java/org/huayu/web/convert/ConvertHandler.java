@@ -7,7 +7,7 @@ import org.springframework.util.ObjectUtils;
 import java.lang.reflect.Method;
 
 /**
- *
+ * 类型转换器封装对象
  */
 public class ConvertHandler extends HandlerMethod {
 

@@ -20,40 +20,44 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * 处理RequestMapping注解
+ * 具体的适配器实现类
  */
 public class RequestMappingHandlerMethodAdapter extends ApplicationObjectSupport implements HandlerMethodAdapter, InitializingBean {
 
-    //参数解析器组合器
+    // 参数解析器组合器
     private HandlerMethodArgumentResolverComposite resolverComposite = new HandlerMethodArgumentResolverComposite();
 
+    // 类型转换器组合器
     private ConvertComposite convertComposite = new ConvertComposite();
 
+    // 返回值处理器组合器
     private HandlerMethodReturnValueHandlerComposite returnValueHandlerComposite = new HandlerMethodReturnValueHandlerComposite();
 
     private int order;
 
     /**
-     *
-     * @param handlerMethod
-     * @return
+     * 是否支持
      */
     @Override
     public boolean support(HandlerMethod handlerMethod) {
         return AnnotatedElementUtils.hasAnnotation(handlerMethod.getMethod(), RequestMapping.class);
     }
 
-    // 具体执行的逻辑
+    /**
+     * 处理请求，执行方法就在这内部
+     */
     @Override
     public void handler(HttpServletRequest req, HttpServletResponse res, HandlerMethod handler) throws Exception {
         final WebServletRequest webServletRequest = new WebServletRequest(req, res);
         // 需要将 HandlerMethod执行，创建一个类来包装
         final ServletInvocableMethod invocableMethod = new ServletInvocableMethod();
+        // 获取到初始化的组件
         invocableMethod.setHandlerMethod(handler);
         invocableMethod.setConvertComposite(convertComposite);
         invocableMethod.setResolverComposite(resolverComposite);
         invocableMethod.setReturnValueHandlerComposite(returnValueHandlerComposite);
-        invocableMethod.invokeAndHandle(webServletRequest,handler);
+        // 执行方法逻辑
+        invocableMethod.invokeAndHandle(webServletRequest, handler);
     }
 
     public void setOrder(int order) {
@@ -65,7 +69,9 @@ public class RequestMappingHandlerMethodAdapter extends ApplicationObjectSupport
         return this.order;
     }
 
-    // 初始化基础组件
+    /**
+     * 初始化基础组件
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         resolverComposite.addResolvers(getDefaultArgumentResolver());
@@ -77,17 +83,20 @@ public class RequestMappingHandlerMethodAdapter extends ApplicationObjectSupport
         convertComposite.addConvertMap(diyConvertMap);
     }
 
-    public Map<Class, ConvertHandler> getDiyConvertMap(){
+    /**
+     * 获取用户自定义的类型转换器
+     */
+    public Map<Class, ConvertHandler> getDiyConvertMap() {
         final HashMap<Class, ConvertHandler> convertHandlerHashMap = new HashMap<>();
         final ApplicationContext context = obtainApplicationContext();
-        final String[] names = BeanFactoryUtils.beanNamesForAnnotationIncludingAncestors(context,ControllerAdvice.class);
+        final String[] names = BeanFactoryUtils.beanNamesForAnnotationIncludingAncestors(context, ControllerAdvice.class);
         for (String name : names) {
             final Class<?> type = context.getType(name);
             final Method[] methods = type.getMethods();
             for (Method method : methods) {
-                if (AnnotatedElementUtils.hasAnnotation(method, ConvertType.class)){
+                if (AnnotatedElementUtils.hasAnnotation(method, ConvertType.class)) {
                     final ConvertType convertType = AnnotatedElementUtils.findMergedAnnotation(method, ConvertType.class);
-                    convertHandlerHashMap.put(convertType.value(),new ConvertHandler(context.getBean(name),method));
+                    convertHandlerHashMap.put(convertType.value(), new ConvertHandler(context.getBean(name), method));
 
                 }
             }
@@ -95,51 +104,59 @@ public class RequestMappingHandlerMethodAdapter extends ApplicationObjectSupport
         return convertHandlerHashMap;
     }
 
-    //初始化返回值处理器
-    public List<HandlerMethodReturnValueHandler> getDefaultMethodReturnValueHandler(){
+    /**
+     * 初始化返回值处理器
+     */
+    public List<HandlerMethodReturnValueHandler> getDefaultMethodReturnValueHandler() {
         final ArrayList<HandlerMethodReturnValueHandler> handlerMethodReturnValueHandlers = new ArrayList<>();
         handlerMethodReturnValueHandlers.add(new RequestResponseBodyMethodReturnValueHandler());
         return handlerMethodReturnValueHandlers;
 
     }
 
-    // 初始化类型转换器
-    public Map<Class, ConvertHandler> getDefaultConvert(){
+    /**
+     * 初始化类型转换器
+     */
+    public Map<Class, ConvertHandler> getDefaultConvert() {
         final Map<Class, ConvertHandler> convertMap = new HashMap<>();
-        convertMap.put(Integer.class,getConvertHandler(new IntegerConvert(Integer.class)));
-        convertMap.put(int.class,getConvertHandler(new IntegerConvert(Integer.class)));
-        convertMap.put(String.class,getConvertHandler(new StringConvert(String.class)));
-        convertMap.put(Long.class,getConvertHandler(new LongConvert(Long.class)));
-        convertMap.put(long.class,getConvertHandler(new LongConvert(Long.class)));
-        convertMap.put(Float.class,getConvertHandler(new FloatConvert(Float.class)));
-        convertMap.put(float.class,getConvertHandler(new FloatConvert(Float.class)));
-        convertMap.put(Boolean.class,getConvertHandler(new BooleanConvert(Boolean.class)));
-        convertMap.put(boolean.class,getConvertHandler(new BooleanConvert(Boolean.class)));
-        convertMap.put(Byte.class,getConvertHandler(new ByteConvert(Byte.class)));
-        convertMap.put(byte.class,getConvertHandler(new ByteConvert(Byte.class)));
-        convertMap.put(Short.class,getConvertHandler(new ShortConvert(Short.class)));
-        convertMap.put(short.class,getConvertHandler(new ShortConvert(Short.class)));
-        convertMap.put(Date.class,getConvertHandler(new DateConvert(Date.class)));
-        convertMap.put(Map.class,getConvertHandler(new MapConvert(HashMap.class)));
-        convertMap.put(Collection.class,getConvertHandler(new CollectionConvert(Collection.class)));
-        convertMap.put(List.class,getConvertHandler(new ListConvert(ArrayList.class)));
-        convertMap.put(Set.class,getConvertHandler(new SetConvert(HashSet.class)));
+        convertMap.put(Integer.class, getConvertHandler(new IntegerConvert(Integer.class)));
+        convertMap.put(int.class, getConvertHandler(new IntegerConvert(Integer.class)));
+        convertMap.put(String.class, getConvertHandler(new StringConvert(String.class)));
+        convertMap.put(Long.class, getConvertHandler(new LongConvert(Long.class)));
+        convertMap.put(long.class, getConvertHandler(new LongConvert(Long.class)));
+        convertMap.put(Float.class, getConvertHandler(new FloatConvert(Float.class)));
+        convertMap.put(float.class, getConvertHandler(new FloatConvert(Float.class)));
+        convertMap.put(Boolean.class, getConvertHandler(new BooleanConvert(Boolean.class)));
+        convertMap.put(boolean.class, getConvertHandler(new BooleanConvert(Boolean.class)));
+        convertMap.put(Byte.class, getConvertHandler(new ByteConvert(Byte.class)));
+        convertMap.put(byte.class, getConvertHandler(new ByteConvert(Byte.class)));
+        convertMap.put(Short.class, getConvertHandler(new ShortConvert(Short.class)));
+        convertMap.put(short.class, getConvertHandler(new ShortConvert(Short.class)));
+        convertMap.put(Date.class, getConvertHandler(new DateConvert(Date.class)));
+        convertMap.put(Map.class, getConvertHandler(new MapConvert(HashMap.class)));
+        convertMap.put(Collection.class, getConvertHandler(new CollectionConvert(Collection.class)));
+        convertMap.put(List.class, getConvertHandler(new ListConvert(ArrayList.class)));
+        convertMap.put(Set.class, getConvertHandler(new SetConvert(HashSet.class)));
         return convertMap;
     }
 
-
-    protected ConvertHandler getConvertHandler(Convert convert){
+    /**
+     * 获取类型转换器
+     */
+    protected ConvertHandler getConvertHandler(Convert convert) {
         try {
             final Method method = convert.getClass().getDeclaredMethod("convert", Object.class);
-            return new ConvertHandler(convert,method);
+            return new ConvertHandler(convert, method);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    //初始化参数解析器
-    public List<HandlerMethodArgumentResolver> getDefaultArgumentResolver(){
+    /**
+     * 初始化参数解析器
+     */
+    public List<HandlerMethodArgumentResolver> getDefaultArgumentResolver() {
         final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
         resolvers.add(new PathVariableMethodArgumentResolver());
         resolvers.add(new PathVariableMapMethodArgumentResolver());

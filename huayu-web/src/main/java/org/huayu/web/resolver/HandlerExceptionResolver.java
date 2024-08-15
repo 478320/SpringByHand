@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * 异常处理器顶层接口
  */
 public interface HandlerExceptionResolver extends Ordered {
 

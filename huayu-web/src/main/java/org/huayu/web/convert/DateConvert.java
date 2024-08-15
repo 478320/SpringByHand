@@ -3,7 +3,7 @@ package org.huayu.web.convert;
 import java.util.Date;
 
 /**
- *
+ * Date类型转换器
  */
 public class DateConvert extends Convert<Date>{
 

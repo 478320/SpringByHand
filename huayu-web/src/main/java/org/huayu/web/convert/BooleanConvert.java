@@ -1,7 +1,7 @@
 package org.huayu.web.convert;
 
 /**
- *
+ * Boolean类型转换器
  */
 public class BooleanConvert extends Convert<Boolean>{
 
